@@ -24,7 +24,7 @@ class PuntDeInteresBotigaSolucio : public PuntDeInteresBase
 private:
 	std::string shop; 
 	std::string hores; //opening_hours
-	bool discapacitat; //wheelchair
+	std::string discapacitat; //wheelchair
 public:
 	PuntDeInteresBotigaSolucio() {} // TODO --> creo que hay que inicializar 
 									//"shop", "opening_hours"... con el xml
@@ -56,7 +56,7 @@ class PuntDeInteresRestaurantSolucio : public PuntDeInteresBase
 {
 private:
 	std::string cuina; //cuisine
-	bool discapacitat; //wheelchair
+	std::string discapacitat; //wheelchair
 public:
 	// TODO --> constructor
 
