@@ -26,8 +26,9 @@ private:
 	std::string hores; //opening_hours
 	std::string discapacitat; //wheelchair
 public:
-	PuntDeInteresBotigaSolucio() {} // TODO --> creo que hay que inicializar 
-									//"shop", "opening_hours"... con el xml
+	PuntDeInteresBotigaSolucio(Coordinate coord, std::string name,
+		std::string shop = "", std::string hores = "", std::string discapacitat = "") :
+		PuntDeInteresBase(coord, name),	shop(shop), hores(hores), discapacitat(discapacitat) {}
 
 	std::string getName() override { return PuntDeInteresBase::getName(); }
 	unsigned int getColor() override
@@ -40,7 +41,7 @@ public:
 		else if (shop == "bakery")
 		{
 			// std::string::find(x) retorna std::string::npos si no troba x
-			if (hores.find("06:00-22:00") != std::string::npos && discapacitat)
+			if (discapacitat == "yes" && hores.find("06:00-22:00") != std::string::npos)
 				color = 0x4CB944;
 			else
 				color = 0xE85D75;
@@ -58,7 +59,9 @@ private:
 	std::string cuina; //cuisine
 	std::string discapacitat; //wheelchair
 public:
-	// TODO --> constructor
+	PuntDeInteresRestaurantSolucio(Coordinate coord, std::string name,
+		std::string cuina = "", std::string discapacitat = "") :
+		PuntDeInteresBase(coord, name), cuina(cuina), discapacitat(discapacitat) {}
 
 	std::string getName() override { return PuntDeInteresBase::getName(); }
 	unsigned int getColor() override
@@ -71,7 +74,7 @@ public:
 		else if (cuina == "chinese")
 			color = 0xA6D9F7;
 
-		if (discapacitat)
+		if (discapacitat == "yes")
 			color = 0x251351;
 
 		return color;

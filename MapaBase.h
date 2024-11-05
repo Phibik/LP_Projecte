@@ -9,7 +9,7 @@
 class MapaBase {
 
 	public:
-		virtual void getPdis(std::vector<PuntDeInteresBase*>&) = 0;
+		virtual void getPdis(std::vector<PuntDeInteresBase*>&) = 0; // potser s'ha de posar pdis
 		virtual void getCamins(std::vector<CamiBase*>&) = 0;
 		virtual void parsejaXmlElements(std::vector<XmlElement>& xmlElements) = 0;
 
@@ -17,7 +17,17 @@ class MapaBase {
 
 class MapaSolucio: public MapaBase
 {
-	void getPdis(std::vector<PuntDeInteresBase*>&) override;
+	void getPdis(std::vector<PuntDeInteresBase*>& pdis) override
+	{
+		Coordinate cBotiga = { 41.4918606, 2.1465411 };
+		Coordinate cRestaurant = { 41.4902204, 2.1406477 };
+		PuntDeInteresBase* botiga = new PuntDeInteresBotigaSolucio(cBotiga, "La Millor Pastisseria",
+			"bakery");
+		PuntDeInteresBase* restaurant = new PuntDeInteresRestaurantSolucio(cRestaurant, 
+			"El Millor Restaurant", "regional", "yes");
+		pdis = { botiga, restaurant };
+	}
+
 	void getCamins(std::vector<CamiBase*>&) override;
 	void parsejaXmlElements(std::vector<XmlElement>& xmlElements) override;
 };
