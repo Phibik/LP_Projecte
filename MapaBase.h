@@ -17,6 +17,7 @@ class MapaBase {
 
 class MapaSolucio: public MapaBase
 {
+public:
 	void getPdis(std::vector<PuntDeInteresBase*>& pdis) override
 	{
 		Coordinate cBotiga = { 41.4918606, 2.1465411 };
@@ -28,7 +29,12 @@ class MapaSolucio: public MapaBase
 		pdis = { botiga, restaurant };
 	}
 
-	void getCamins(std::vector<CamiBase*>&) override;
+	void getCamins(std::vector<CamiBase*>& cami) override
+	{
+		CamiBase* camiSol = new CamiSolucio;
+		cami = { camiSol };
+	}
+
 	void parsejaXmlElements(std::vector<XmlElement>& xmlElements) override;
 };
 
