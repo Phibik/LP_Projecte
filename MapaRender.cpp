@@ -5,11 +5,60 @@
 MapaRender* MapaRender::m_singleton = nullptr;
 
 MapaRender::MapaRender() {
-
     this->m_xml4osm_util = new XML4OSMUtil();
-    
-    // TODO: Cal que instancieu m_mapaBase amb la vostra MapaSolucio
-    this->m_mapaBase = nullptr;
+    this->m_mapaBase = new MapaSolucio();  
+}
+
+void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements) {
+    for (const auto& element : xmlElements) {
+        if (element.name == "node") {
+            // Procesar punts d'interes basics
+            double lat = 0.0, lon = 0.0;
+            std::string name;
+
+          
+            for (const auto& attr : element.attributes) {
+                if (attr.first == "lat") lat = std::stod(attr.second);
+                if (attr.first == "lon") lon = std::stod(attr.second);
+                if (attr.first == "name") name = attr.second;
+            }
+
+          
+            if (!name.empty()) {
+                Coordinate coord = { lat, lon };
+                puntsDeInteres.push_back(new PuntDeInteresBase(coord, name));
+            }
+
+        }
+        else if (element.name == "way") {
+           
+            std::string name;
+            std::vector<Coordinate> caminoCoords;
+
+          
+            for (const auto& attr : element.attributes) {
+                if (attr.first == "name") name = attr.second;
+            }
+
+            
+            for (const auto& child : element.children) {
+                if (child.first == "nd") {
+                   
+                    for (const auto& refAttr : child.second) {
+                        if (refAttr.first == "ref") {
+                            Coordinate coord = Util::getNodeCoordinate(refAttr.second);
+                            caminoCoords.push_back(coord);
+                        }
+                    }
+                }
+            }
+
+           
+            if (!caminoCoords.empty()) {
+                camins.push_back(new CamiSolucio(name, caminoCoords));
+            }
+        }
+    }
 }
 
 // DO NOT TOUCH THIS
@@ -83,7 +132,7 @@ void MapaRender::construeixOSM(const std::string& path_map) {
             m_mapaBase->parsejaXmlElements(result);
         }
     }
-    else {//Aquest missatge sortir‡ quan encara no has fet la part del projecte que carrega el mapa
+    else {//Aquest missatge sortir√† quan encara no has fet la part del projecte que carrega el mapa
         Util::escriuEnMonitor("No has instanciat correctament MapaBase!");
     }
 }
