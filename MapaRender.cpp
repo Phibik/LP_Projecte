@@ -11,52 +11,65 @@ MapaRender::MapaRender() {
 
 void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements) {
     for (const auto& element : xmlElements) {
-        if (element.name == "node") {
-            // Procesar punts d'interes basics
-            double lat = 0.0, lon = 0.0;
-            std::string name;
+        // Procesamiento de nodos "node" y "way" basado en los atributos y fills
+        double lat = 0.0, lon = 0.0;
+        std::string name;
 
-          
-            for (const auto& attr : element.attributes) {
-                if (attr.first == "lat") lat = std::stod(attr.second);
-                if (attr.first == "lon") lon = std::stod(attr.second);
-                if (attr.first == "name") name = attr.second;
+        // Buscar atributos en 'atributs'
+                for (const auto& attr : element.atributs) {
+            if (attr.first == "lat") {
+                try {
+                    lat = std::stod(attr.second);  // Conversión de string a double
+                }
+                catch (const std::invalid_argument& e) {
+                    // Manejo de error si falla la conversión
+                }
             }
-
-          
-            if (!name.empty()) {
-                Coordinate coord = { lat, lon };
-                puntsDeInteres.push_back(new PuntDeInteresBase(coord, name));
+            else if (attr.first == "lon") {
+                try {
+                    lon = std::stod(attr.second);
+                }
+                catch (const std::invalid_argument& e) {
+                    // Manejo de error si falla la conversión
+                }
             }
-
+            else if (attr.first == "name") {
+                name = attr.second;
+            }
         }
-        else if (element.name == "way") {
-           
-            std::string name;
-            std::vector<Coordinate> caminoCoords;
 
-          
-            for (const auto& attr : element.attributes) {
-                if (attr.first == "name") name = attr.second;
+        // Si encontramos un punto de interés ("node") con nombre
+        if (!name.empty() && lat != 0.0 && lon != 0.0) {
+            Coordinate coord = { lat, lon };
+            puntsDeInteres.push_back(new PuntDeInteresBase(coord, name));
+        }
+
+        // Procesamiento específico para elementos de tipo "way"
+        std::vector<Coordinate> caminoCoords;
+
+        for (const auto& fill : element.fills) {
+            if (fill.first == "tag") {
+                auto tempAtributs = fill.second;
+                auto kv = Util::kvDeTag(tempAtributs);
+                if (kv.first == "name") {
+                    name = kv.second;
+                    break;  // Salir al encontrar el nombre del "way"
+                }
             }
-
-            
-            for (const auto& child : element.children) {
-                if (child.first == "nd") {
-                   
-                    for (const auto& refAttr : child.second) {
-                        if (refAttr.first == "ref") {
-                            Coordinate coord = Util::getNodeCoordinate(refAttr.second);
-                            caminoCoords.push_back(coord);
-                        }
+            else if (fill.first == "nd") {
+                for (const auto& refAttr : fill.second) {
+                    if (refAttr.first == "ref") {
+                        Coordinate coord = { lat, lon };
+                        caminoCoords.push_back(coord);
                     }
                 }
             }
+        }
 
-           
-            if (!caminoCoords.empty()) {
-                camins.push_back(new CamiSolucio(name, caminoCoords));
-            }
+        // Si el elemento es un "way" con coordenadas
+        if (!caminoCoords.empty()) {
+            camins.push_back(new CamiSolucio(name, caminoCoords));
+            //camins.push_back(new CamiSolucio(name, caminoCoords));
         }
     }
 }
