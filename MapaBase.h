@@ -22,6 +22,23 @@ private:
 	std::vector<PuntDeInteresBase*> puntsDeInteres;
 	std::vector<CamiBase*> camins;
 public:
+	void clearCamins()
+	{
+		while (!camins.empty())
+		{
+			delete camins.front();
+			camins.erase(camins.begin());
+		}
+	}
+	
+	void clearPdis()
+	{
+		while (!puntsDeInteres.empty())
+		{
+			delete puntsDeInteres.front();
+			puntsDeInteres.erase(puntsDeInteres.begin());
+		}
+	}
 	void getPdis(std::vector<PuntDeInteresBase*>& pdis) override
 	{
 		for (std::vector<PuntDeInteresBase*>::const_iterator it = puntsDeInteres.begin(); it != puntsDeInteres.end(); it++)
@@ -40,6 +57,8 @@ public:
 
 	void parsejaXmlElements(std::vector<XmlElement>& xmlElements) override
 	{
+		clearCamins();
+		clearPdis();
 		for (const auto& element : xmlElements)
 		{
 			if (element.id_element == "node")
