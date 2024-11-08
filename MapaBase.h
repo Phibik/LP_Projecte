@@ -38,30 +38,35 @@ public:
 		{
 			if (element.id_element == "node")
 			{
-				// variables per pdi botiga i restaurant
+				// atributs lat i lon, id
+				std::string id;
 				double lat = 0.0, lon = 0.0;
+				for (const auto& atribut : element.atributs)
+				{
+					// assignació coordenades
+					if (atribut.first == "lat")
+						lat = std::stod(atribut.second);
+					else if (atribut.first == "lon")
+						lon = std::stod(atribut.second);
+					//id
+					else if (atribut.first == "id")
+						id = atribut.second;
+				}
+
+				// fills  (aqui esta el shop, opening_hours...)
+				/// inicialitzar variables
 				std::string name = "";
 				bool botiga = false, restaurant = false;
 				std::string shop = "", cuina = "";
 				std::string hores = "";
 				std::string wheelchair = "no";
 
-				// atributs
-				for (const auto& atribut : element.atributs)
-				{
-					// assignació coordenades
-					if (atribut.first == "lat")
-						lat = std::stod(atribut.second);
-					if (atribut.first == "lon")
-						lon = std::stod(atribut.second);
-				}
-
-				// fills  (aqui esta el shop, opening_hours...)
+				/// bucle que busca shops, wheelcharis...
 				for (const auto& fill : element.fills)
 				{
 					// extreure una parella <key, value>, e. g. <shop, bakery>
-					std::pair<std::string, std::string> parella;
-					std::vector <PAIR_ATTR_VALUE> fillet = fill.second;
+					std::pair<std::string, std::string> parella;	// pair<string, string>
+					std::vector <PAIR_ATTR_VALUE> fillet = fill.second;		
 					parella = Util::kvDeTag(fillet);
 
 					// deteccio de shop o restaurant
@@ -75,10 +80,12 @@ public:
 					}
 
 					// altres atributs
-					if (parella.first == "wheelchair")
+					else if (parella.first == "wheelchair")
 						wheelchair = parella.second;
-					if (parella.first == "opening_hours")
+					else if (parella.first == "opening_hours")
 						hores = parella.second;
+					else if (parella.first == "name")
+						name = parella.second;
 				}
 
 				Coordinate coords = { lat, lon };
@@ -86,17 +93,23 @@ public:
 				// crear PuntDeInteresBase / Botiga / Restaurant
 				if (botiga)
 				{
-					puntsDeInteres.push_back(new PuntDeInteresBotigaSolucio(coords, name, shop, hores, wheelchair));
+					PuntDeInteresBase* p = new PuntDeInteresBotigaSolucio(coords, name, shop, hores, wheelchair);
+					p->setId(id);
+					puntsDeInteres.push_back(p);
 					//Util::escriuEnMonitor("Botiga");
 				}
 				else if (restaurant)
 				{
-					puntsDeInteres.push_back(new PuntDeInteresRestaurantSolucio(coords, name, cuina, wheelchair));
+					PuntDeInteresBase* p = new PuntDeInteresRestaurantSolucio(coords, name, cuina, wheelchair);
+					p->setId(id);
+					puntsDeInteres.push_back(p);
 					//Util::escriuEnMonitor("Restaurant");
 				}
 				else
 				{
-					puntsDeInteres.push_back(new PuntDeInteresBase(coords, name));
+					PuntDeInteresBase* p = new PuntDeInteresBase(coords, name);
+					p->setId(id);
+					puntsDeInteres.push_back(p);
 					//Util::escriuEnMonitor("Node");
 				}
 			}
