@@ -24,12 +24,18 @@ private:
 public:
 	void getPdis(std::vector<PuntDeInteresBase*>& pdis) override
 	{
-		pdis = puntsDeInteres;
+		for (std::vector<PuntDeInteresBase*>::const_iterator it = puntsDeInteres.begin(); it != puntsDeInteres.end(); it++)
+		{
+			pdis.push_back(*it);
+		}
 	}
 
 	void getCamins(std::vector<CamiBase*>& cami) override
 	{
-		cami = camins;
+		for (std::vector<CamiBase*>::iterator it = camins.begin(); it != camins.end(); it++)
+		{
+			cami.push_back((*it)->clone());
+		}
 	}
 
 	void parsejaXmlElements(std::vector<XmlElement>& xmlElements) override
@@ -43,7 +49,7 @@ public:
 				double lat = 0.0, lon = 0.0;
 				for (const auto& atribut : element.atributs)
 				{
-					// assignació coordenades
+					// assignaciÃ³ coordenades
 					if (atribut.first == "lat")
 						lat = std::stod(atribut.second);
 					else if (atribut.first == "lon")
