@@ -5,32 +5,35 @@
 
 class PuntDeInteresBase {
 
-	private:
-		Coordinate m_coord;
-		std::string m_name;
+private:
+	std::string id;
+	Coordinate m_coord;
+	std::string m_name;
 
-	public:		
-		PuntDeInteresBase();
-		PuntDeInteresBase(Coordinate coord, std::string name);
+public:
+	PuntDeInteresBase();
+	PuntDeInteresBase(Coordinate coord, std::string name);
 
-		virtual std::string getName();
-		Coordinate getCoord();
-		virtual unsigned int getColor();
+	virtual std::string getName();
+	Coordinate getCoord();
+	virtual unsigned int getColor();
+	void setId(const std::string& id) { this->id = id; }
 
 };
 
 class PuntDeInteresBotigaSolucio : public PuntDeInteresBase
 {
 private:
-	std::string shop; 
+	std::string shop;
 	std::string hores; //opening_hours
 	std::string discapacitat; //wheelchair
 public:
 	PuntDeInteresBotigaSolucio(Coordinate coord, std::string name,
 		std::string shop = "", std::string hores = "", std::string discapacitat = "") :
-		PuntDeInteresBase(coord, name),	shop(shop), hores(hores), discapacitat(discapacitat) {}
+		PuntDeInteresBase(coord, name), shop(shop), hores(hores), discapacitat(discapacitat) {}
 
 	std::string getName() override { return PuntDeInteresBase::getName(); }
+	
 	unsigned int getColor() override
 	{
 		unsigned int color = PuntDeInteresBase::getColor();
