@@ -7,6 +7,7 @@
 class CamiBase {
 	public:
 		virtual std::vector<Coordinate> getCamiCoords() = 0;
+		virtual CamiBase* clone() = 0;
 };
 
 class CamiSolucio : public CamiBase
@@ -25,5 +26,7 @@ public:
 	{
 		return camins;
 	}
+
+	CamiSolucio* clone() { return new CamiSolucio(*this); }
 };
 
