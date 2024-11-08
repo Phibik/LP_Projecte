@@ -15,6 +15,7 @@ public:
 	PuntDeInteresBase(Coordinate coord, std::string name);
 
 	virtual std::string getName();
+	virtual clone() = 0;
 	Coordinate getCoord();
 	virtual unsigned int getColor();
 	void setId(const std::string& id) { this->id = id; }
@@ -33,7 +34,7 @@ public:
 		PuntDeInteresBase(coord, name), shop(shop), hores(hores), discapacitat(discapacitat) {}
 
 	std::string getName() override { return PuntDeInteresBase::getName(); }
-	
+	PuntDeInteresBotigaSolucio* clone() { return new PuntDeInteresBotigaSolucio(*this); }
 	unsigned int getColor() override
 	{
 		unsigned int color = PuntDeInteresBase::getColor();
@@ -67,6 +68,7 @@ public:
 		PuntDeInteresBase(coord, name), cuina(cuina), discapacitat(discapacitat) {}
 
 	std::string getName() override { return PuntDeInteresBase::getName(); }
+	PuntDeInteresRestaurantSolucio* clone() { return new PuntDeInteresRestaurantSolucio(*this); }
 	unsigned int getColor() override
 	{
 		// valor per defecte, pot cambiar si es "pizza", "chinese"...
