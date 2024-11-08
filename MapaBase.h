@@ -42,8 +42,8 @@ public:
 				double lat = 0.0, lon = 0.0;
 				std::string name = "";
 				bool botiga = false, restaurant = false;
-				std::string shop = "", rest = "";
-				std::string hores = "", cuina = "";
+				std::string shop = "", cuina = "";
+				std::string hores = "";
 				std::string wheelchair = "no";
 
 				// atributs
@@ -69,9 +69,9 @@ public:
 						botiga = true;
 						shop = parella.second;
 					}
-					else if (parella.first == "restaurant") {
+					else if (parella.first == "cuisine") {
 						restaurant = true;
-						rest = parella.second;
+						cuina = parella.second;
 					}
 
 					// altres atributs
@@ -79,8 +79,6 @@ public:
 						wheelchair = parella.second;
 					if (parella.first == "opening_hours")
 						hores = parella.second;
-					if (parella.first == "cuisine")
-						cuina = parella.second;
 				}
 
 				Coordinate coords = { lat, lon };
@@ -89,22 +87,22 @@ public:
 				if (botiga)
 				{
 					puntsDeInteres.push_back(new PuntDeInteresBotigaSolucio(coords, name, shop, hores, wheelchair));
-					Util::escriuEnMonitor("Botiga");
+					//Util::escriuEnMonitor("Botiga");
 				}
 				else if (restaurant)
 				{
-					puntsDeInteres.push_back(new PuntDeInteresRestaurantSolucio(coords, name, rest, wheelchair));
-					Util::escriuEnMonitor("Restaurant");
+					puntsDeInteres.push_back(new PuntDeInteresRestaurantSolucio(coords, name, cuina, wheelchair));
+					//Util::escriuEnMonitor("Restaurant");
 				}
 				else
 				{
 					puntsDeInteres.push_back(new PuntDeInteresBase(coords, name));
-					Util::escriuEnMonitor("Node");
+					//Util::escriuEnMonitor("Node");
 				}
 			}
 			else if (element.id_element == "way")
 			{
-				Util::escriuEnMonitor("camins");
+				//Util::escriuEnMonitor("camins");
 			}
 		}
 	}
